@@ -17,6 +17,7 @@
                 :cards="column.cards"
                 :columnIndex="index"
                 :totalColumns="columns.length"
+                @moveCard="moveCard"
               />
             </v-col>
           </v-row>
@@ -37,6 +38,29 @@
   import { columns as initialColumns, Column } from '../data/data';
   
   const columns = ref<Column[]>(initialColumns);
+  
+  const moveCard = (cardId: number, fromColumnIndex: number, toColumnIndex: number, fromCardIndex: number, toCardIndex: number) => {
+    
+    console.log(fromColumnIndex, toColumnIndex, fromCardIndex, toCardIndex);
+    if (fromColumnIndex === toColumnIndex) {
+      // Moving within the same column
+      if (fromCardIndex === toCardIndex) return;
+      console.log(fromColumnIndex, toColumnIndex, fromCardIndex, toCardIndex);
+      const column = columns.value[fromColumnIndex];
+      const [movedCard] = column.cards.splice(fromCardIndex, 1);
+      column.cards.splice(toCardIndex, 0, movedCard);
+    } else {
+      // Moving to a different column
+      const fromColumn = columns.value[fromColumnIndex];
+      const toColumn = columns.value[toColumnIndex];
+  
+      const cardIndex = fromColumn.cards.findIndex(card => card.id === cardId);
+      if (cardIndex !== -1) {
+        const [movedCard] = fromColumn.cards.splice(cardIndex, 1);
+        toColumn.cards.splice(toCardIndex, 0, movedCard);
+      }
+    }
+  };
   </script>
   
   <style scoped lang="scss">
@@ -54,7 +78,7 @@
     display: flex;
     flex-direction: column;
     padding: 0;
-    overflow: hidden; /* Ensure no overflow */
+    overflow: scroll; /* Ensure no overflow */
     padding-top: 64px; /* Add padding to account for v-app-bar height */
   }
   

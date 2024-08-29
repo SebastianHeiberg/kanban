@@ -19,10 +19,12 @@
   
   <style scoped>
   .kanban-card {
+    background-color: white; 
     cursor: grab;
     height: 150px;
     display: flex;
     flex-direction: column;
+    color: black;
   }
   
   .kanban-card:active {

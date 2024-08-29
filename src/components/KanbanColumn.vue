@@ -12,6 +12,8 @@
         class="kanban-card"
         :data-id="card.id"
         draggable="true"
+        @dragstart="onDragStart($event, card.id)"
+        @dragend="onDragEnd"
       >
         <KanbanCard :card="card" />
       </v-col>
@@ -20,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, toRefs } from 'vue';
 import KanbanCard from '@/components/KanbanCard.vue';
 
 interface Card {
@@ -40,15 +42,55 @@ export default defineComponent({
     },
     cards: {
       type: Array as () => Card[],
-      required: true
+      required: false
     },
     columnIndex: {
       type: Number,
       required: true
     }
   },
-  methods: {
+  emits: ['moveCard'],
+  setup(props, { emit }) {
+    const { cards, columnIndex } = toRefs(props);
 
+    let draggedCardId: number | null = null;
+
+    const onDragStart = (event: DragEvent, cardId: number) => {
+      draggedCardId = cardId;
+      event.dataTransfer?.setData('text/plain', cardId.toString());
+    };
+
+    const onDragEnd = (event: DragEvent) => {
+      const toElement = document.elementFromPoint(event.clientX, event.clientY);
+      const toColumnElement = toElement?.closest('.kanban-column');
+
+      if (!toColumnElement || toElement === null) {
+        return;
+      }
+
+      const toColumnIndex = parseInt(toColumnElement?.getAttribute('data-column-index') || '', 10);
+      const fromColumnIndex = columnIndex.value;
+
+      if (fromColumnIndex !== toColumnIndex) {
+        emit('moveCard', draggedCardId, fromColumnIndex, toColumnIndex);
+      } else {
+        const fromCardIndex = cards.value.findIndex(card => card.id === draggedCardId);
+        const toCard = toElement?.closest('.kanban-card');
+        const toCardIndex = cards.value.findIndex(card => card.id === parseInt(toCard?.getAttribute('data-id') || '', 10));
+
+        if (fromCardIndex !== -1 && toCardIndex !== -1) {
+          emit('moveCard', draggedCardId, fromColumnIndex, fromColumnIndex, fromCardIndex, toCardIndex);
+        }
+      }
+
+      draggedCardId = null; // Reset dragged card ID
+    };
+
+    return {
+      cards,
+      onDragStart,
+      onDragEnd
+    };
   }
 });
 </script>
