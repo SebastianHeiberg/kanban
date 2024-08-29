@@ -1,62 +1,56 @@
 <template>
-    <div class="kanban-container">
-      <div class="kanban-bar">
-        <h1>Kanban Board</h1>
-      </div>
+  <v-container class="kanban-container">
+    <v-app-bar app color="#381010">
+      <v-toolbar-title class="text-center">Kanban Board</v-toolbar-title>
+    </v-app-bar>
+
+    <v-main class="kanban-main">
       <div class="kanban-board">
         test
       </div>
-      <div class="footer">
-        <p>&copy; 2024 Sebastian Heiberg.</p>
-      </div>
-    </div>
-  </template>
-    
-    <style scoped lang="scss">
-    .kanban-container {
-      height: 100vh;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .kanban-container .kanban-bar {
-      color: white;
-      padding: 1rem;
-      text-align: center;
-      background-color: #381010;
+    </v-main>
 
-    }
-    
-    .kanban-container .kanban-board {
-      display: flex;
-      gap: 1rem;
-      background-color: #fff9f3;
-      flex-grow: 1;
-      width: 100%;
-      height: 100%; /* Ensure the Kanban board takes full height */
-      overflow-x: scroll; /* Enable horizontal scrolling */
-      overflow-y: hidden; /* Disable vertical scrolling */
-    }
-    
-    .kanban-container .footer {
-      text-align: center;
-      padding: 1rem;
-    }
+    <v-footer app color="#381010" dark>
+      <v-col class="text-center">
+        <span>&copy; 2024 Sebastian Heiberg.</span>
+      </v-col>
+    </v-footer>
+  </v-container>
+</template>
 
-    .footer {
-    background-color: #381010;
-    color: white;
-    text-align: center;
-    padding: 1rem;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-  }
-    </style>
+<script>
+export default {
+  name: 'KanbanBord'
+};
+</script>
+
+<style scoped lang="scss">
+.v-container.kanban-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; 
+  width: 100%;  
+  padding: 0;    
+  margin: 0;     
+}
+
+.kanban-main {
+  flex-grow: 1; 
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
 
 
-  
-  
-  
- 
+.kanban-board {
+  display: flex;
+  gap: 1rem;
+  background-color: #fff9f3;
+  flex-grow: 1;
+  width: 100vh;
+  height: 100%; 
+  overflow-x: scroll; 
+  overflow-y: hidden; 
+}
+
+</style>
