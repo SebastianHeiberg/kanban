@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     KanbanBord: typeof import('./src/components/KanbanBord.vue')['default']
+    KanbanCard: typeof import('./src/components/KanbanCard.vue')['default']
     KanbanColumn: typeof import('./src/components/KanbanColumn.vue')['default']
   }
 }
