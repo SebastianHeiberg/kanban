@@ -22,19 +22,19 @@ export interface Card {
     { 
       title: 'In Progress', 
       cards: [
-        { id: 3, title: 'Task e', taskDescription: 'Description for Task e' }
+        { id: 5, title: 'Task e', taskDescription: 'Description for Task e' }
       ] 
     },
     { 
       title: 'Stuck', 
       cards: [
-        { id: 4, title: 'Task f', taskDescription: 'Description for Task f' }
+        { id: 6, title: 'Task f', taskDescription: 'Description for Task f' }
       ] 
     },
     { 
       title: 'Done', 
       cards: [
-        { id: 4, title: 'Task g', taskDescription: 'Description for Task g' }
+        { id: 7, title: 'Task g', taskDescription: 'Description for Task g' }
       ] 
     },
   ];

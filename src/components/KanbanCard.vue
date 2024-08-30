@@ -1,5 +1,5 @@
 <template>
-    <v-card class="kanban-card">
+    <v-card class="kanban-card" :data-id="card.id">
       <v-card-title>{{ card.title }}</v-card-title>
       <v-card-text>{{ card.taskDescription }}</v-card-text>
     </v-card>
