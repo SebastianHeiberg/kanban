@@ -33,9 +33,8 @@
   </v-container>
 </template>
 
-
 <script lang="ts">
-import { defineComponent, toRefs, ref } from 'vue';
+import { defineComponent, toRefs } from 'vue';
 import KanbanCard from '@/components/KanbanCard.vue';
 
 interface Card {
@@ -63,63 +62,29 @@ export default defineComponent({
       required: true
     }
   },
-  emits: ['moveCardWithinColumn', 'moveCardBetweenColumns'],
+  emits: ['moveCard', 'moveCardBetweenColumns', 'dragStart'],
   setup(props, { emit }) {
-    const { cards, columnIndex } = toRefs(props);
-    const draggedCardId = ref<number | null>(null); // Initialize as null
-    const fromColumnIndex = ref<number | null>(null); // Initialize as null
+    const { cards } = toRefs(props);
 
-
-    const onDragStart = (columnIndex: number,cardId: number) => {
-        draggedCardId.value = cardId;
-        fromColumnIndex.value = columnIndex;
-        console.log("fromColumnIndex ondragstart: ", fromColumnIndex.value);
-        console.log("columnindex in ondragstart: ", columnIndex);
-     };
-
-    const onDragOver = (event: DragEvent) => {
-        event.preventDefault();
-        event.stopPropagation();
-        console.log(fromColumnIndex.value);
-        console.log(DragEvent)
+    // Emit drag start event to parent
+    const onDragStart = (columnIndex: number, cardId: number) => {
+      emit('dragStart', columnIndex, cardId); 
     };
 
-    const onDropCard = (event: DragEvent, toColumnIndex: number, toCardIndex: number | null = null) => {
+    const onDragOver = (event: DragEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+    };
 
-        event.preventDefault(); // Prevent default behavior
-        event.stopPropagation(); // Stop the event from bubbling up, and not triggering the onDropColumn event
-
-        const fromColumnIndex = columnIndex.value; 
-        const cardId = draggedCardId.value;
-        console.log("cardId: ", cardId); 
-
-        // If dropping within the same column
-        if (fromColumnIndex === toColumnIndex) {
-          const fromCardIndex = cards.value.findIndex((card) => card.id === cardId);
-          if (toCardIndex !== null && fromCardIndex !== toCardIndex) {
-            emit('moveCardWithinColumn', fromColumnIndex, fromCardIndex, toCardIndex);
-          }
-        } else if (fromColumnIndex !== toColumnIndex){
-          console.log("testing");
-        }
-
+    const onDropCard = (event: DragEvent, toColumnIndex: number, toCardIndex: number) => {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      emit('moveCard', toColumnIndex, toCardIndex);
     };
 
     const onDropColumn = (toColumnIndex: number) => {
-
-      console.log(fromColumnIndex.value);
-
-      try {
-        const cardId = draggedCardId.value;
-
-        if (cardId === null || fromColIndex === null) return; 
-
-        if (fromColumnIndex.value !== toColumnIndex) {
-          emit('moveCardBetweenColumns', cardId, fromColIndex, toColumnIndex, cards.value.length);
-        }
-      } catch (error) {
-        console.error("Error in onDropColumn:", error);
-      }
+      emit('moveCardBetweenColumns', toColumnIndex);
     };
 
     return {
@@ -132,7 +97,6 @@ export default defineComponent({
   }
 });
 </script>
-
 
 <style scoped>
 .kanban-column {
@@ -161,7 +125,6 @@ export default defineComponent({
   flex-direction: column;
   gap: 1rem;
   flex-grow: 1; 
-
 }
 
 .kanban-card {
@@ -178,5 +141,4 @@ export default defineComponent({
   align-items: self-end; 
   padding: 5px;
 }
-
 </style>
