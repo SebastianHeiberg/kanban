@@ -21,7 +21,7 @@
   .kanban-card {
     background-color: white; 
     cursor: grab;
-    height: 150px;
+    height: 100px;
     display: flex;
     flex-direction: column;
     color: black;

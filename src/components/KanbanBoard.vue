@@ -1,52 +1,51 @@
 <template>
-  <v-app>
-    <v-container class="kanban-container" fluid>
-      <v-app-bar app color="#381010">
-        <v-toolbar-title class="text-center">Kanban Board</v-toolbar-title>
-      </v-app-bar>
-      <v-main class="kanban-main">
-        <v-row class="kanban-board" no-gutters>
-          <v-col
-            v-for="(column, index) in columns"
-            :key="index"
-            cols="auto"
-          >
-            <KanbanColumn
-              :title="column.title"
-              :cards="column.cards"
-              :columnIndex="index"
-              :totalColumns="columns.length"
-              @moveCard="moveCard"
-              @moveCardBetweenColumns="moveCardBetweenColumns"
-              @dragStart="onDragStart"
-            />
-          </v-col>
-        </v-row>
-      </v-main>
-      <v-footer app color="#381010" dark>
-        <v-col class="text-center">
-          <span>&copy; 2024 Sebastian Heiberg.</span>
+  <v-container class="kanban-container" fluid>
+    <v-app-bar app color="#381010">
+      <v-toolbar-title class="text-center">Kanban Board</v-toolbar-title>
+    </v-app-bar>
+    <v-main class="kanban-main">
+      <v-row class="kanban-board" no-gutters>
+        <v-col
+          v-for="(column, index) in columns"
+          :key="index"
+          cols="auto"
+        >
+          <KanbanColumn
+            :title="column.title"
+            :cards="column.cards"
+            :columnIndex="index"
+            :totalColumns="columns.length"
+            @moveCard="moveCard"
+            @moveCardBetweenColumns="moveCardBetweenColumns"
+            @dragStart="onDragStart"
+          />
         </v-col>
-      </v-footer>
-    </v-container>
-  </v-app>
+      </v-row>
+    </v-main>
+    <v-footer app color="#381010" dark>
+      <v-col class="text-center">
+        <span>&copy; 2024 Sebastian Heiberg.</span>
+      </v-col>
+    </v-footer>
+  </v-container>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import KanbanColumn from './KanbanColumn.vue';
-import { columns as initialColumns, Column } from '../data/data';
+import { columns as defaultColumns, Column } from '../data/data';
 
-// Initialize the board state with dummy data
-const columns = ref<Column[]>(initialColumns);
+// Define props
+const props = defineProps<{ initialColumns?: Column[] }>();
 
-// State for tracking drag events
+// Use provided initialColumns or fallback to defaultColumns
+const columns = ref<Column[]>(props.initialColumns || defaultColumns);
+
 const draggedCardId = ref<number | null>(null);
 const fromColumnIndex = ref<number | null>(null);
 
 /* Handles moving a card within the same column, or being dropped 
 on a card in another column */
-
 const moveCard = (toColumnIndex: number, toCardIndex: number) => {
 
   if (fromColumnIndex.value === null || draggedCardId.value === null) {
@@ -84,7 +83,7 @@ const moveCardBetweenColumns = (toColumnIndex: number) => {
 };
 
 /* Handles the start of a drag event,
-put it here because, the fromColumnIndex gets reset, when passing to another column, 
+put it here because the fromColumnIndex gets reset, when passing to another column, 
 when i assign value in the column component */
 const onDragStart = (columnIndex: number, cardId: number) => {
   draggedCardId.value = cardId;

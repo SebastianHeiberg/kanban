@@ -1,13 +1,13 @@
 <template>
   <v-app>
     <v-main>
-      <KanbanBord />
+      <KanbanBoard />
     </v-main>
   </v-app>
 </template>
 
 <script setup lang="ts">
-import KanbanBord from './components/KanbanBord.vue';
+import KanbanBoard from './components/KanbanBoard.vue';
 </script>
 
 <style scoped lang="scss">
