@@ -69,10 +69,8 @@ describe("KanbanBoard.vue", () => {
     const wrapper = createWrapper();
     const kanbanColumn = wrapper.findComponent(KanbanColumn);
 
-    // Emit the dragStart event
     kanbanColumn.vm.$emit('dragStart', 1, 1);
 
-    // Check if the KanbanBoard component has emitted the dragStart event
     const emittedEvents = kanbanColumn.emitted('dragStart');
     expect(emittedEvents).toBeTruthy();
     expect(emittedEvents[0]).toEqual([1, 1]);
@@ -83,7 +81,6 @@ describe("KanbanBoard.vue", () => {
     const kanbanColumn = wrapper.findComponent(KanbanColumn);
     const updatedColumns = wrapper.findComponent(KanbanBoard).props('initialColumns');
 
-    // Simulate dragging and moving the card
     kanbanColumn.vm.$emit('dragStart', 0, 2); // from column index, card id
     kanbanColumn.vm.$emit("moveCard", 0, 0);
 
@@ -96,11 +93,9 @@ describe("KanbanBoard.vue", () => {
     const wrapper = createWrapper();
     const kanbanColumn = wrapper.findComponent(KanbanColumn);
 
-    // Simulate dragging and moving the card between columns
     kanbanColumn.vm.$emit('dragStart', 0, 0); // from column index, card id
     kanbanColumn.vm.$emit("moveCard", 1, 1);
 
-    // Verify column state
     const updatedColumns = wrapper.findComponent(KanbanBoard).props('initialColumns');
     expect(updatedColumns[0].cards.length).toBe(1);
     expect(updatedColumns[1].cards.length).toBe(2);
@@ -111,7 +106,6 @@ describe("KanbanBoard.vue", () => {
     const kanbanColumn = wrapper.findComponent(KanbanColumn);
     const updatedColumns = wrapper.findComponent(KanbanBoard).props('initialColumns');
 
-    // Simulate dragging and moving the card between columns
     kanbanColumn.vm.$emit('dragStart', 0, 2); // from column index, card id
     kanbanColumn.vm.$emit("moveCardBetweenColumns", 1); // to column index
 
